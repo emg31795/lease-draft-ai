@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { assertRequiredFields } from '../lib/generateNotice.js';
+import { checkRateLimit, getClientIp, rateLimitResponse } from '../lib/rateLimit.js';
 
 // Fields we trust into Stripe Checkout Session metadata. Kept to short, plain-text
 // values only — Stripe caps each metadata value at 500 characters.
@@ -25,6 +26,15 @@ export default async function handler(req, res) {
   if (!process.env.STRIPE_SECRET_KEY) {
     console.error('checkout error: STRIPE_SECRET_KEY is not set');
     return res.status(500).json({ error: 'Payments are not configured on the server yet.' });
+  }
+
+  const ip = getClientIp(req);
+  const { allowed, retryAfterSeconds } = checkRateLimit(`checkout:${ip}`, {
+    max: 10,
+    windowMs: 10 * 60 * 1000,
+  });
+  if (!allowed) {
+    return rateLimitResponse(res, retryAfterSeconds);
   }
 
   const body = req.body || {};
