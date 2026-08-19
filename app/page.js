@@ -7,6 +7,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   
+  <script src="https://cdn.tailwindcss.com"></script>
+  
   const [formData, setFormData] = useState({
     state: 'California',
     noticeType: 'Pay or Quit Notice',
