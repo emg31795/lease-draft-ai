@@ -5,8 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LeaseDraft AI - State-Compliant Legal Notices</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Client-Side PDF Generation Library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    /* Print Styles: Hide all UI elements except the notice content when saving to PDF */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printArea, #printArea * {
+        visibility: visible;
+      }
+      #printArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 20px;
+        font-family: inherit;
+        white-space: pre-wrap;
+        color: black !important;
+        background: white !important;
+      }
+    }
+  </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
 
@@ -91,8 +111,8 @@
               Unlock & Pay via Stripe ($9)
             </button>
           </a>
-          <button onclick="downloadPDF()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2 px-4 rounded-md shadow text-sm">
-            Save as Printable PDF
+          <button onclick="triggerPrint()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2 px-4 rounded-md shadow text-sm">
+            Print / Save as PDF
           </button>
         </div>
       </div>
@@ -134,6 +154,7 @@
         } else {
           const output = document.getElementById('outputContainer');
           output.className = 'bg-slate-50 p-4 rounded-md text-xs font-mono border whitespace-pre-wrap max-h-96 overflow-y-auto text-slate-800 text-left';
+          output.id = 'printArea';
           output.innerText = data.text;
 
           document.getElementById('actionContainer').classList.remove('hidden');
@@ -147,19 +168,8 @@
       }
     });
 
-    function downloadPDF() {
-      const element = document.getElementById('outputContainer');
-      const noticeType = document.getElementById('noticeType').value;
-      
-      const opt = {
-        margin:       0.5,
-        filename:     `${noticeType.replaceAll(' ', '_')}_Draft.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-      };
-
-      html2pdf().set(opt).from(element).save();
+    function triggerPrint() {
+      window.print();
     }
   </script>
 </body>
