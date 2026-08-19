@@ -5,8 +5,12 @@ import { useState } from 'react';
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [checkingOut, setCheckingOut] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-  
+  const [previewText, setPreviewText] = useState('');
+  const [generateError, setGenerateError] = useState('');
+  const [checkoutError, setCheckoutError] = useState('');
+
   const [formData, setFormData] = useState({
     state: 'California',
     noticeType: 'Pay or Quit Notice',
@@ -40,10 +44,50 @@ export default function Home() {
 
   const handleGenerate = async () => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    setGenerateError('');
+
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Unable to draft your notice right now.');
+      }
+
+      setPreviewText(data.previewText);
       setShowPreview(true);
-    }, 1200);
+    } catch (error) {
+      setGenerateError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCheckout = async () => {
+    setCheckingOut(true);
+    setCheckoutError('');
+
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Unable to start checkout right now.');
+      }
+
+      window.location.href = data.url;
+    } catch (error) {
+      setCheckoutError(error.message);
+      setCheckingOut(false);
+    }
   };
 
   const scrollToGenerator = () => {
@@ -368,38 +412,33 @@ export default function Home() {
                     </button>
                   </div>
 
-                  {/* Document Mockup Preview */}
-                  <div className="bg-slate-50 border border-slate-300 rounded-lg p-6 font-mono text-xs text-slate-800 space-y-4 shadow-inner max-h-80 overflow-y-auto">
-                    <div className="text-center font-bold text-sm underline">{formData.noticeType.toUpperCase()}</div>
-                    <div className="text-right">Date: {formData.serveDate || new Date().toLocaleDateString()}</div>
-                    <div>
-                      <strong>TO TENANT(S):</strong> {formData.tenantName || '[Tenant Name]'}<br />
-                      <strong>PROPERTY ADDRESS:</strong> {formData.propertyAddress || '[Property Address]'}
-                    </div>
-                    <p className="leading-relaxed">
-                      PLEASE TAKE NOTICE that pursuant to the laws of the State of <strong>{formData.state}</strong>, you are hereby required to pay the past-due balance of <strong>${formData.amountOwed || '0.00'}</strong> or surrender possession of the premises within the statutory timeframe prescribed by law.
-                    </p>
-                    <div className="p-3 bg-white border rounded text-[11px] text-slate-600 font-sans">
-                      <strong>Included Attached Affidavit:</strong> Formatted Proof of Service for {formData.serveMethod} by {formData.serverName || 'Landlord/Agent'}.
-                    </div>
+                  {/* AI-Generated Preview (first few lines only — full document unlocks after payment) */}
+                  <div className="bg-slate-50 border border-slate-300 rounded-lg p-6 font-mono text-xs text-slate-800 whitespace-pre-wrap leading-relaxed max-h-80 overflow-y-auto">
+                    {previewText}
                   </div>
 
                   {/* Direct Checkout Trigger */}
                   <div className="bg-slate-100 p-6 rounded-xl border border-slate-200 text-center">
                     <h4 className="text-lg font-bold text-slate-900 mb-1">Unlock Official PDF Download</h4>
                     <p className="text-sm text-slate-600 mb-4">Includes high-resolution PDF, printable format, and unlimited re-downloads.</p>
-                    
-                    <a 
-                      href="https://buy.stripe.com/6oU8wP563gDn6AA5NRcEw00"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-base px-8 py-4 rounded-xl shadow-lg transition duration-200"
+
+                    <button
+                      type="button"
+                      onClick={handleCheckout}
+                      disabled={checkingOut}
+                      className="inline-block w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold text-base px-8 py-4 rounded-xl shadow-lg transition duration-200"
                     >
-                      Pay $9 & Download Official PDF Notice
-                    </a>
+                      {checkingOut ? 'Redirecting to secure checkout...' : 'Pay $9 & Download Official PDF Notice'}
+                    </button>
                     <p className="text-xs text-slate-500 mt-2">Secure 256-bit Stripe checkout. No subscription required.</p>
+                    {checkoutError && (
+                      <p className="text-xs text-red-600 mt-3 font-medium">{checkoutError}</p>
+                    )}
                   </div>
                 </div>
+              )}
+              {generateError && !showPreview && (
+                <p className="text-sm text-red-600 font-medium mt-4">{generateError}</p>
               )}
             </div>
           </div>
