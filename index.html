@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LeaseDraft AI - State-Compliant Legal Notices</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Client-Side PDF Generation Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
 
@@ -83,14 +85,22 @@
           </div>
         </div>
 
-        <div id="actionContainer" class="hidden mt-6 pt-4 border-t border-slate-100 text-center">
+        <div id="actionContainer" class="hidden mt-6 pt-4 border-t border-slate-100 space-y-3 text-center">
           <a href="https://buy.stripe.com/6oU8wP563gDn6AA5NRcEw00" target="_blank" class="block w-full">
             <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-md shadow">
-              Download Printable PDF ($9)
+              Unlock & Pay via Stripe ($9)
             </button>
           </a>
+          <button onclick="downloadPDF()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2 px-4 rounded-md shadow text-sm">
+            Save as Printable PDF
+          </button>
         </div>
       </div>
+    </div>
+
+    <!-- Legal Non-Counsel Disclaimer Footer -->
+    <div class="mt-12 p-4 bg-slate-100 rounded-lg text-center text-xs text-slate-500 max-w-2xl mx-auto border border-slate-200">
+      <strong class="font-semibold text-slate-600">Legal Disclaimer:</strong> LeaseDraft AI provides automated legal notice software templates for informational purposes only and does not constitute formal legal counsel, representation, or legal advice. Laws vary by jurisdiction; consult a licensed attorney for specific legal inquiries.
     </div>
   </main>
 
@@ -136,6 +146,21 @@
         btn.disabled = false;
       }
     });
+
+    function downloadPDF() {
+      const element = document.getElementById('outputContainer');
+      const noticeType = document.getElementById('noticeType').value;
+      
+      const opt = {
+        margin:       0.5,
+        filename:     `${noticeType.replaceAll(' ', '_')}_Draft.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save();
+    }
   </script>
 </body>
 </html>
