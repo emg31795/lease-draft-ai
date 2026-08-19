@@ -9,7 +9,10 @@ function SuccessContent() {
 
   const [status, setStatus] = useState('loading'); // 'loading' | 'ready' | 'error'
   const [fullText, setFullText] = useState('');
+  const [noticeTitle, setNoticeTitle] = useState('Legal Notice');
   const [errorMessage, setErrorMessage] = useState('');
+  const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState('');
 
   useEffect(() => {
     if (!sessionId) {
@@ -31,6 +34,9 @@ function SuccessContent() {
       .then((data) => {
         if (cancelled) return;
         setFullText(data.fullText);
+        if (data.noticeType || data.state) {
+          setNoticeTitle([data.noticeType, data.state].filter(Boolean).join(' — '));
+        }
         setStatus('ready');
       })
       .catch((error) => {
@@ -43,6 +49,38 @@ function SuccessContent() {
       cancelled = true;
     };
   }, [sessionId]);
+
+  const handleDownloadPdf = async () => {
+    setDownloading(true);
+    setDownloadError('');
+
+    try {
+      const res = await fetch('/api/render-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullText, title: noticeTitle }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Unable to generate your PDF right now.');
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'LeaseDraft-Notice.pdf';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      setDownloadError(error.message);
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans pb-12">
@@ -97,10 +135,20 @@ function SuccessContent() {
               </div>
 
               <button
-                onClick={() => window.print()}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition duration-150"
+                onClick={handleDownloadPdf}
+                disabled={downloading}
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg shadow transition duration-150"
               >
-                Print / Save as Official PDF
+                {downloading ? 'Preparing your PDF...' : 'Download Official PDF'}
+              </button>
+              {downloadError && (
+                <p className="text-sm text-red-600 font-medium mt-3">{downloadError}</p>
+              )}
+              <button
+                onClick={() => window.print()}
+                className="w-full mt-2 text-xs text-slate-500 hover:text-slate-700 underline"
+              >
+                Having trouble downloading? Print this page instead
               </button>
             </>
           )}
