@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Unlocked - LeaseDraft AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media print {
+      body * { visibility: hidden; }
+      #printArea, #printArea * { visibility: visible; }
+      #printArea {
+        position: absolute; left: 0; top: 0; width: 100%;
+        padding: 20px; font-family: inherit; white-space: pre-wrap;
+        color: black !important; background: white !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
+
+  <header class="border-b bg-white py-4 px-6 flex justify-between items-center shadow-sm">
+    <span class="text-2xl font-bold text-blue-600">LeaseDraft<span class="text-slate-800">AI</span></span>
+    <span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-semibold">Payment Verified ✓</span>
+  </header>
+
+  <main class="max-w-2xl mx-auto py-12 px-4 text-center">
+    <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200">
+      <div class="text-4xl mb-3">🎉</div>
+      <h1 class="text-2xl font-bold text-slate-900 mb-2">Payment Complete!</h1>
+      <p class="text-slate-600 text-sm mb-6">Your full legal document is unlocked below.</p>
+
+      <div id="printArea" class="bg-slate-50 p-6 rounded-md text-xs font-mono border whitespace-pre-wrap text-slate-800 text-left mb-6 max-h-96 overflow-y-auto">
+        Loading document...
+      </div>
+
+      <button onclick="window.print()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-md shadow">
+        Print / Save as Official PDF
+      </button>
+    </div>
+  </main>
+
+  <script>
+    const fullNotice = localStorage.getItem('unlockedDocument');
+    const displayBox = document.getElementById('printArea');
+    
+    if (fullNotice) {
+      displayBox.innerText = fullNotice;
+    } else {
+      displayBox.innerText = "No document session found. Please generate a notice on the homepage first.";
+    }
+  </script>
+</body>
+</html>
