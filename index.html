@@ -5,28 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LeaseDraft AI - State-Compliant Legal Notices</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Print Styles: Hide all UI elements except the notice content when saving to PDF */
-    @media print {
-      body * {
-        visibility: hidden;
-      }
-      #printArea, #printArea * {
-        visibility: visible;
-      }
-      #printArea {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        padding: 20px;
-        font-family: inherit;
-        white-space: pre-wrap;
-        color: black !important;
-        background: white !important;
-      }
-    }
-  </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
 
@@ -96,24 +74,27 @@
         </form>
       </div>
 
-      <!-- Result Output -->
-      <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 flex flex-col justify-between">
+      <!-- Result Output (Blurred Until Paid) -->
+      <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 flex flex-col justify-between relative overflow-hidden">
         <div>
           <h2 class="text-xl font-bold mb-4 text-slate-800">2. Generated Document</h2>
-          <div id="outputContainer" class="h-64 border-2 border-dashed border-slate-200 rounded-md flex items-center justify-center text-slate-400 text-center p-6">
-            Fill out the details on the left to generate your customized state notice.
+          <div id="outputWrapper" class="relative">
+            <div id="outputContainer" class="h-64 border-2 border-dashed border-slate-200 rounded-md flex items-center justify-center text-slate-400 text-center p-6">
+              Fill out the details on the left to generate your customized state notice.
+            </div>
+            
+            <!-- Lock Overlay -->
+            <div id="lockOverlay" class="hidden absolute inset-0 bg-white/70 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center rounded-md">
+              <span class="text-3xl mb-2">🔒</span>
+              <p class="font-bold text-slate-900 text-sm mb-1">Document Draft Ready!</p>
+              <p class="text-xs text-slate-600 mb-4">Unlock the full legal text & printable PDF export.</p>
+              <a id="payBtn" href="https://buy.stripe.com/6oU8wP563gDn6AA5NRcEw00" target="_blank" class="w-full">
+                <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-md shadow text-sm">
+                  Unlock Full Document ($9)
+                </button>
+              </a>
+            </div>
           </div>
-        </div>
-
-        <div id="actionContainer" class="hidden mt-6 pt-4 border-t border-slate-100 space-y-3 text-center">
-          <a href="https://buy.stripe.com/6oU8wP563gDn6AA5NRcEw00" target="_blank" class="block w-full">
-            <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-md shadow">
-              Unlock & Pay via Stripe ($9)
-            </button>
-          </a>
-          <button onclick="triggerPrint()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2 px-4 rounded-md shadow text-sm">
-            Print / Save as PDF
-          </button>
         </div>
       </div>
     </div>
@@ -152,12 +133,14 @@
         if (data.error) {
           alert('Error: ' + data.error);
         } else {
+          // Save generated text to local memory for recovery after payment
+          localStorage.setItem('generatedNotice', data.text);
+
           const output = document.getElementById('outputContainer');
-          output.className = 'bg-slate-50 p-4 rounded-md text-xs font-mono border whitespace-pre-wrap max-h-96 overflow-y-auto text-slate-800 text-left';
-          output.id = 'printArea';
+          output.className = 'bg-slate-50 p-4 rounded-md text-xs font-mono border whitespace-pre-wrap max-h-64 overflow-hidden text-slate-800 text-left select-none blur-[2px]';
           output.innerText = data.text;
 
-          document.getElementById('actionContainer').classList.remove('hidden');
+          document.getElementById('lockOverlay').classList.remove('hidden');
         }
       } catch (err) {
         alert('Failed to connect to AI server. Please try again.');
@@ -167,10 +150,6 @@
         btn.disabled = false;
       }
     });
-
-    function triggerPrint() {
-      window.print();
-    }
   </script>
 </body>
 </html>
