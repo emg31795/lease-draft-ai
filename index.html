@@ -24,12 +24,12 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- Form -->
+      <!-- Input Form -->
       <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
         <h2 class="text-xl font-bold mb-4 text-slate-800">1. Document Details</h2>
         <form id="noticeForm" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-slate-700">Property State</label>
+            <label className="block text-sm font-medium text-slate-700">Property State</label>
             <select id="state" class="mt-1 block w-full rounded-md border border-slate-300 p-2 text-slate-800">
               <option>California</option>
               <option>Texas</option>
@@ -40,7 +40,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-slate-700">Notice Type</label>
+            <label className="block text-sm font-medium text-slate-700">Notice Type</label>
             <select id="noticeType" class="mt-1 block w-full rounded-md border border-slate-300 p-2 text-slate-800">
               <option>30-Day Notice to Vacate</option>
               <option>Notice of Rent Increase</option>
@@ -93,30 +93,46 @@
   </main>
 
   <script>
-    document.getElementById('noticeForm').addEventListener('submit', function(e) {
+    document.getElementById('noticeForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
       const btn = document.getElementById('submitBtn');
-      btn.innerText = 'Drafting Notice...';
+      btn.innerText = 'Drafting AI Legal Notice...';
       btn.disabled = true;
 
-      const state = document.getElementById('state').value;
-      const noticeType = document.getElementById('noticeType').value;
-      const landlord = document.getElementById('landlordName').value;
-      const tenant = document.getElementById('tenantName').value;
-      const address = document.getElementById('propertyAddress').value;
+      const payload = {
+        state: document.getElementById('state').value,
+        noticeType: document.getElementById('noticeType').value,
+        landlord: document.getElementById('landlordName').value,
+        tenant: document.getElementById('tenantName').value,
+        address: document.getElementById('propertyAddress').value
+      };
 
-      setTimeout(() => {
-        const docText = `${noticeType.toUpperCase()}\n\nDate: ${new Date().toLocaleDateString()}\nState: ${state}\n\nTo Tenant(s): ${tenant}\nProperty Address: ${address}\n\nThis notice serves as official legal documentation regarding your tenancy at the specified address. Issued by ${landlord} pursuant to applicable state statutes.\n\n[Full Legal Terms Drafted Successfully]`;
+      try {
+        const response = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
 
-        const output = document.getElementById('outputContainer');
-        output.className = 'bg-slate-50 p-4 rounded-md text-xs font-mono border whitespace-pre-wrap max-h-96 overflow-y-auto text-slate-800 text-left';
-        output.innerText = docText;
+        const data = await response.json();
 
-        document.getElementById('actionContainer').classList.remove('hidden');
+        if (data.error) {
+          alert('Error: ' + data.error);
+        } else {
+          const output = document.getElementById('outputContainer');
+          output.className = 'bg-slate-50 p-4 rounded-md text-xs font-mono border whitespace-pre-wrap max-h-96 overflow-y-auto text-slate-800 text-left';
+          output.innerText = data.text;
+
+          document.getElementById('actionContainer').classList.remove('hidden');
+        }
+      } catch (err) {
+        alert('Failed to connect to AI server. Please try again.');
+        console.error(err);
+      } finally {
         btn.innerText = 'Generate Legal Draft';
         btn.disabled = false;
-      }, 1000);
+      }
     });
   </script>
 </body>
