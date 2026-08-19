@@ -30,7 +30,8 @@ export default async function handler(req, res) {
     }
 
     const fullText = await generateNotice(session.metadata || {});
-    return res.status(200).json({ fullText });
+    const { noticeType, state } = session.metadata || {};
+    return res.status(200).json({ fullText, noticeType, state });
   } catch (error) {
     console.error('deliver error:', error);
     const status = error.status || (error.type === 'StripeInvalidRequestError' ? 404 : 500);
