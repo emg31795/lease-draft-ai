@@ -1,3 +1,5 @@
+import { Analytics } from '@vercel/analytics/next';
+
 export const metadata = {
   title: 'LeaseDraft AI — Court-Ready Landlord Notices',
   description:
@@ -17,7 +19,18 @@ export default function RootLayout({ children }) {
         */}
         <script src="https://cdn.tailwindcss.com"></script>
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        {/*
+          Vercel Web Analytics: toggling it on in the dashboard alone does nothing —
+          it also requires this component to actually be present and deployed, which
+          is what was missing (the dashboard was showing "not enabled" even after Eric
+          clicked through the setup screen, because that screen's real ask was "add
+          this code," not just a switch). Placed once here in the root layout so every
+          route gets tracked.
+        */}
+        <Analytics />
+      </body>
     </html>
   );
 }
