@@ -96,9 +96,6 @@ export default function Home() {
 
   return (
     <>
-      {/* Script tag forces Tailwind CSS to load cleanly without extra config files */}
-      <script src="https://cdn.tailwindcss.com"></script>
-
       <div className="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased selection:bg-blue-100 selection:text-blue-900">
         
         {/* Header */}
