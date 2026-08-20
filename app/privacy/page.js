@@ -58,7 +58,7 @@ export default function PrivacyPage() {
             <h2 className="text-lg font-semibold text-slate-900 mb-2">Your choices</h2>
             <p>
               You can ask us to delete any information you've provided by emailing{' '}
-              <a href="mailto:maarketeer@gmail.com" className="text-blue-600 underline">maarketeer@gmail.com</a>.
+              <a href="mailto:leasedraftai@proton.me" className="text-blue-600 underline">leasedraftai@proton.me</a>.
               Since we don't retain a database of past notices ourselves, this mainly means removing you from
               any correspondence and confirming nothing further is stored on our end.
             </p>
@@ -68,7 +68,7 @@ export default function PrivacyPage() {
             <h2 className="text-lg font-semibold text-slate-900 mb-2">Contact</h2>
             <p>
               Questions about this policy? Email{' '}
-              <a href="mailto:maarketeer@gmail.com" className="text-blue-600 underline">maarketeer@gmail.com</a>.
+              <a href="mailto:leasedraftai@proton.me" className="text-blue-600 underline">leasedraftai@proton.me</a>.
             </p>
           </section>
         </div>
