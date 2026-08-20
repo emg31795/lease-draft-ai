@@ -2,6 +2,13 @@
 
 import { useState } from 'react';
 
+// States whose statutory citations, notice periods, and day-counting deadlines are
+// grounded in lib/stateRules.js (verified in code, not just AI-generated) — see that
+// file for the researched-and-sourced rules. Every other supported state still drafts
+// through the AI using general legal research, which has not been independently
+// verified. Keep this in sync with lib/stateRules.js's RULES keys.
+const STATUTE_VERIFIED_STATES = ['California', 'Texas'];
+
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -145,7 +152,7 @@ export default function Home() {
             {/* Trust Badges */}
             <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 pt-8 border-t border-slate-200/80 text-slate-600 text-xs sm:text-sm font-medium">
               <div className="flex items-center justify-center gap-2">
-                <span className="text-emerald-500 font-bold">✓</span> 100% Accurate for CA, TX, FL, NY, OH
+                <span className="text-emerald-500 font-bold">✓</span> CA & TX Statutes Verified in Code
               </div>
               <div className="flex items-center justify-center gap-2">
                 <span className="text-emerald-500 font-bold">✓</span> Includes Proof of Service
@@ -213,7 +220,18 @@ export default function Home() {
                           <option value="New York">New York (14-Day Rent Demand)</option>
                           <option value="Ohio">Ohio (3-Day Notice to Leave Premises)</option>
                         </select>
-                        <p className="text-xs text-slate-500 mt-1">Applies statutory legal codes specific to this state.</p>
+                        {STATUTE_VERIFIED_STATES.includes(formData.state) ? (
+                          <p className="text-xs text-slate-500 mt-1">
+                            Citation, notice period, and deadline for this state are verified in our statutory
+                            rules engine, not just AI-generated.
+                          </p>
+                        ) : (
+                          <p className="text-xs text-amber-600 mt-1">
+                            This state&apos;s notice is AI-drafted using general legal research and has not yet
+                            been independently statute-verified like California and Texas. Please double-check
+                            the citation and deadline before relying on it.
+                          </p>
+                        )}
                       </div>
 
                       <div>
@@ -537,7 +555,10 @@ export default function Home() {
             </p>
 
             <p className="mt-2 max-w-2xl mx-auto">
-              Currently supports California, Texas, Florida, New York, and Ohio. More states coming soon.
+              Statutory citations, notice periods, and deadlines are verified in code for California and Texas.
+              Florida, New York, and Ohio notices are also available but are currently AI-drafted using general
+              legal research and have not yet been independently statute-verified. Additional verified states
+              coming soon.
             </p>
 
             <p className="mt-2 max-w-2xl mx-auto">
