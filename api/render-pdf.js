@@ -1,4 +1,5 @@
 import { renderNoticePdf } from '../lib/renderNoticePdf.js';
+import { checkRateLimit, getClientIp, rateLimitResponse } from '../lib/rateLimit.js';
 
 // Pure formatter: turns already-delivered notice text into a downloadable PDF.
 // Deliberately does NOT touch Stripe or re-generate the document — the caller
@@ -11,6 +12,15 @@ const MAX_TEXT_LENGTH = 50_000;
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const ip = getClientIp(req);
+  const { allowed, retryAfterSeconds } = checkRateLimit(`render-pdf:${ip}`, {
+    max: 20,
+    windowMs: 10 * 60 * 1000,
+  });
+  if (!allowed) {
+    return rateLimitResponse(res, retryAfterSeconds);
   }
 
   const { fullText, title } = req.body || {};

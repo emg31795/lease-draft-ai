@@ -1,10 +1,22 @@
 import { generateNotice } from '../lib/generateNotice.js';
+import { checkRateLimit, getClientIp, rateLimitResponse } from '../lib/rateLimit.js';
 
 // Free preview endpoint, called from the wizard before checkout. Returns only a
 // truncated preview so the full document is never sent to the browser pre-payment.
+// Rate-limited because every call costs a real OpenAI API call regardless of whether
+// the customer ever pays.
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const ip = getClientIp(req);
+  const { allowed, retryAfterSeconds } = checkRateLimit(`generate:${ip}`, {
+    max: 5,
+    windowMs: 10 * 60 * 1000,
+  });
+  if (!allowed) {
+    return rateLimitResponse(res, retryAfterSeconds);
   }
 
   try {
