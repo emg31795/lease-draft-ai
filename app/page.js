@@ -20,6 +20,7 @@ export default function Home() {
     propertyAddress: '',
     amountOwed: '',
     dueDate: '',
+    violationDescription: '',
     serveMethod: 'Personal Service',
     serverName: '',
     serveDate: '',
@@ -144,7 +145,7 @@ export default function Home() {
             {/* Trust Badges */}
             <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 pt-8 border-t border-slate-200/80 text-slate-600 text-xs sm:text-sm font-medium">
               <div className="flex items-center justify-center gap-2">
-                <span className="text-emerald-500 font-bold">✓</span> 100% State Statutory Codes
+                <span className="text-emerald-500 font-bold">✓</span> 100% Accurate for CA, TX, FL, NY, OH
               </div>
               <div className="flex items-center justify-center gap-2">
                 <span className="text-emerald-500 font-bold">✓</span> Includes Proof of Service
@@ -234,27 +235,46 @@ export default function Home() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                           <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1">Total Past-Due Rent ($) *</label>
-                            <input 
-                              type="number" 
-                              name="amountOwed" 
-                              required 
+                            <input
+                              type="number"
+                              name="amountOwed"
+                              required
                               placeholder="e.g. 1850"
-                              value={formData.amountOwed} 
+                              value={formData.amountOwed}
                               onChange={handleChange}
                               className="w-full rounded-lg border border-slate-300 p-3 text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none"
                             />
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1">Rent Due Date *</label>
-                            <input 
-                              type="date" 
-                              name="dueDate" 
-                              required 
-                              value={formData.dueDate} 
+                            <input
+                              type="date"
+                              name="dueDate"
+                              required
+                              value={formData.dueDate}
                               onChange={handleChange}
                               className="w-full rounded-lg border border-slate-300 p-3 text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none"
                             />
                           </div>
+                        </div>
+                      )}
+
+                      {formData.noticeType === 'Cure or Quit Notice' && (
+                        <div className="pt-2">
+                          <label className="block text-sm font-medium text-slate-700 mb-1">Describe the Lease Violation *</label>
+                          <textarea
+                            name="violationDescription"
+                            required
+                            rows={3}
+                            placeholder="e.g. Unauthorized pet (dog) kept in unit in violation of Section 12 of the lease"
+                            value={formData.violationDescription}
+                            onChange={handleChange}
+                            className="w-full rounded-lg border border-slate-300 p-3 text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none"
+                          />
+                          <p className="text-xs text-slate-500 mt-1">
+                            Be specific — this is what your notice will tell the tenant to fix. Vague descriptions
+                            produce vague notices, which is exactly what gets challenged in court.
+                          </p>
                         </div>
                       )}
                     </div>
@@ -504,6 +524,22 @@ export default function Home() {
         <footer className="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500">
           <div className="max-w-4xl mx-auto px-4">
             <p>© 2026 LeaseDraft AI. All rights reserved.</p>
+
+            <p className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 font-medium">
+              <a href="mailto:maarketeer@gmail.com" className="text-blue-600 hover:underline">Support: maarketeer@gmail.com</a>
+              <a href="/recover" className="text-blue-600 hover:underline">Lost your document?</a>
+              <a href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</a>
+              <a href="/terms" className="text-blue-600 hover:underline">Terms of Service</a>
+            </p>
+
+            <p className="mt-2 max-w-2xl mx-auto">
+              Not happy with your notice? Email us within 7 days of purchase for a full refund, no questions asked.
+            </p>
+
+            <p className="mt-2 max-w-2xl mx-auto">
+              Currently supports California, Texas, Florida, New York, and Ohio. More states coming soon.
+            </p>
+
             <p className="mt-2 max-w-2xl mx-auto">
               Disclaimer: LeaseDraft AI provides automated legal document formatting and self-help tools. LeaseDraft AI is not a law firm and does not provide formal legal representation or legal advice.
             </p>

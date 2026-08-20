@@ -13,6 +13,7 @@ const METADATA_FIELDS = [
   'propertyAddress',
   'amountOwed',
   'dueDate',
+  'violationDescription',
   'serveMethod',
   'serverName',
   'serveDate',
@@ -62,6 +63,11 @@ export default async function handler(req, res) {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card'],
+      // Always create a Customer record from the email Checkout already collects. There's
+      // no database in this project, so this is what makes /api/recover possible: a
+      // customer who loses their success-page tab can look their document back up by the
+      // email they paid with, instead of the purchase being unrecoverable.
+      customer_creation: 'always',
       line_items: [
         {
           price_data: {

@@ -111,15 +111,27 @@ function SuccessContent() {
               <h1 className="text-2xl font-bold text-slate-900 mb-2">We couldn't load your document</h1>
               <p className="text-slate-600 text-sm mb-4">{errorMessage}</p>
               <p className="text-slate-600 text-sm">
-                If you were charged and are seeing this message, contact support with your Stripe receipt
-                and we'll get your document to you directly.
+                If you were charged and are seeing this message, use the recovery tool below to pull up your
+                order by the email you paid with, or email{' '}
+                <a href="mailto:maarketeer@gmail.com" className="text-blue-600 underline">
+                  maarketeer@gmail.com
+                </a>{' '}
+                with your Stripe receipt and we'll get your document to you directly.
               </p>
-              <a
-                href="/"
-                className="inline-block mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition"
-              >
-                Return to Generator
-              </a>
+              <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                <a
+                  href="/recover"
+                  className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition text-center"
+                >
+                  Recover My Document
+                </a>
+                <a
+                  href="/"
+                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition text-center"
+                >
+                  Return to Generator
+                </a>
+              </div>
             </>
           )}
 
