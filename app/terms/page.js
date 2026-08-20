@@ -1,0 +1,77 @@
+export const metadata = {
+  title: 'Terms of Service — LeaseDraft AI',
+};
+
+export default function TermsPage() {
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
+      <header className="border-b bg-white py-4 px-6 mb-8 shadow-sm">
+        <div className="max-w-4xl mx-auto">
+          <a href="/" className="text-xl font-bold text-blue-600">LeaseDraft AI</a>
+        </div>
+      </header>
+
+      <main className="max-w-3xl mx-auto px-4 pb-16">
+        <div className="bg-white p-6 sm:p-8 rounded-xl shadow-md border border-slate-100 space-y-6 text-sm leading-relaxed text-slate-700">
+          <h1 className="text-2xl font-bold text-slate-900">Terms of Service</h1>
+          <p className="text-slate-500">Last updated: August 2026</p>
+
+          <section>
+            <h2 className="text-lg font-semibold text-slate-900 mb-2">Not legal advice</h2>
+            <p>
+              LeaseDraft AI is a self-help document formatting tool. It is not a law firm, does not provide
+              legal representation, and the notices it generates are not a substitute for advice from a
+              licensed attorney in your state. You are responsible for reviewing your notice before using it
+              and for confirming it fits your specific situation.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-slate-900 mb-2">What you're buying</h2>
+            <p>
+              For a one-time $9 payment, you receive a formatted legal notice document and an accompanying
+              Proof of Service affidavit, generated based on the details you provide and current statutory
+              requirements for the state you select. There is no subscription — you are only charged once per
+              document.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-slate-900 mb-2">Refunds</h2>
+            <p>
+              If you're not satisfied with your notice, email{' '}
+              <a href="mailto:maarketeer@gmail.com" className="text-blue-600 underline">maarketeer@gmail.com</a>{' '}
+              within 7 days of purchase and we'll issue a full refund, no questions asked.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-slate-900 mb-2">Accuracy</h2>
+            <p>
+              We work to keep notice content aligned with current statutory requirements for the states we
+              support (currently California, Texas, Florida, New York, and Ohio), but laws change and every
+              situation is different. You should independently verify any statutory citation, deadline, or
+              day-counting calculation before relying on it, especially for anything filed in court.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-slate-900 mb-2">Acceptable use</h2>
+            <p>
+              Don't use LeaseDraft AI to generate notices containing false statements, to harass a tenant, or
+              in a manner that violates applicable law. We reserve the right to refuse service.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-slate-900 mb-2">Contact</h2>
+            <p>
+              Questions about these terms? Email{' '}
+              <a href="mailto:maarketeer@gmail.com" className="text-blue-600 underline">maarketeer@gmail.com</a>.
+            </p>
+          </section>
+        </div>
+      </main>
+    </div>
+  );
+}
