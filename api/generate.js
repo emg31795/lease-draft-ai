@@ -3,7 +3,7 @@ import { checkRateLimit, getClientIp, rateLimitResponse } from '../lib/rateLimit
 
 // Free preview endpoint, called from the wizard before checkout. Returns only a
 // truncated preview so the full document is never sent to the browser pre-payment.
-// Rate-limited because every call costs a real OpenAI API call regardless of whether
+// Rate-limited because every call costs a real Anthropic API call regardless of whether
 // the customer ever pays.
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
