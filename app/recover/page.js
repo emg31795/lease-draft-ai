@@ -88,8 +88,8 @@ export default function RecoverPage() {
 
           <p className="text-xs text-slate-500 mt-6">
             Still stuck? Email{' '}
-            <a href="mailto:maarketeer@gmail.com" className="text-blue-600 underline">
-              maarketeer@gmail.com
+            <a href="mailto:leasedraftai@proton.me" className="text-blue-600 underline">
+              leasedraftai@proton.me
             </a>{' '}
             with your Stripe receipt and we'll send your document directly.
           </p>

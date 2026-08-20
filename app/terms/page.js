@@ -40,7 +40,7 @@ export default function TermsPage() {
             <h2 className="text-lg font-semibold text-slate-900 mb-2">Refunds</h2>
             <p>
               If you're not satisfied with your notice, email{' '}
-              <a href="mailto:maarketeer@gmail.com" className="text-blue-600 underline">maarketeer@gmail.com</a>{' '}
+              <a href="mailto:leasedraftai@proton.me" className="text-blue-600 underline">leasedraftai@proton.me</a>{' '}
               within 7 days of purchase and we'll issue a full refund, no questions asked.
             </p>
           </section>
@@ -67,7 +67,7 @@ export default function TermsPage() {
             <h2 className="text-lg font-semibold text-slate-900 mb-2">Contact</h2>
             <p>
               Questions about these terms? Email{' '}
-              <a href="mailto:maarketeer@gmail.com" className="text-blue-600 underline">maarketeer@gmail.com</a>.
+              <a href="mailto:leasedraftai@proton.me" className="text-blue-600 underline">leasedraftai@proton.me</a>.
             </p>
           </section>
         </div>

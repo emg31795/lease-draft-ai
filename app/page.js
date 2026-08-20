@@ -526,7 +526,7 @@ export default function Home() {
             <p>© 2026 LeaseDraft AI. All rights reserved.</p>
 
             <p className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 font-medium">
-              <a href="mailto:maarketeer@gmail.com" className="text-blue-600 hover:underline">Support: maarketeer@gmail.com</a>
+              <a href="mailto:leasedraftai@proton.me" className="text-blue-600 hover:underline">Support: leasedraftai@proton.me</a>
               <a href="/recover" className="text-blue-600 hover:underline">Lost your document?</a>
               <a href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</a>
               <a href="/terms" className="text-blue-600 hover:underline">Terms of Service</a>

@@ -113,8 +113,8 @@ function SuccessContent() {
               <p className="text-slate-600 text-sm">
                 If you were charged and are seeing this message, use the recovery tool below to pull up your
                 order by the email you paid with, or email{' '}
-                <a href="mailto:maarketeer@gmail.com" className="text-blue-600 underline">
-                  maarketeer@gmail.com
+                <a href="mailto:leasedraftai@proton.me" className="text-blue-600 underline">
+                  leasedraftai@proton.me
                 </a>{' '}
                 with your Stripe receipt and we'll get your document to you directly.
               </p>
