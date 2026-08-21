@@ -1,13 +1,52 @@
 'use client';
 
 import { useState } from 'react';
+import { isNoticeTypeGrounded, nyTierNoticeTypeForOccupancyMonths } from '../lib/stateRules.js';
 
-// States whose statutory citations, notice periods, and day-counting deadlines are
-// grounded in lib/stateRules.js (verified in code, not just AI-generated) — see that
-// file for the researched-and-sourced rules. Every other supported state still drafts
-// through the AI using general legal research, which has not been independently
-// verified. Keep this in sync with lib/stateRules.js's RULES keys.
-const STATUTE_VERIFIED_STATES = ['California', 'Texas'];
+// Which "Notice Type" dropdown options are offered for a given state, and how they're
+// labeled. This isn't just cosmetic: Florida's 30/60-day options are actually about
+// TENANCY TYPE, not duration (Fla. Stat. § 83.57); Ohio has no statutory 60-day tier at
+// all (ORC § 5321.17); and New York needs a 3-tier 30/60/90-day system instead of a
+// binary choice (RPL § 226-c). Keep in sync with lib/stateRules.js's RULES keys.
+function noticeTypeOptionsForState(state) {
+  if (state === 'Ohio') {
+    return [
+      { value: 'Pay or Quit Notice', label: 'Pay Rent or Quit Notice (Non-Payment)' },
+      { value: 'Cure or Quit Notice', label: 'Cure or Quit Notice (Health & Safety Violations Only)' },
+      { value: '30-Day Notice to Vacate', label: '30-Day Notice to Vacate (Month-to-Month Termination)' },
+    ];
+  }
+  if (state === 'Florida') {
+    return [
+      { value: 'Pay or Quit Notice', label: 'Pay Rent or Quit Notice (Non-Payment)' },
+      { value: 'Cure or Quit Notice', label: 'Cure or Quit Notice (Lease Violation)' },
+      { value: '30-Day Notice to Vacate', label: '30-Day Notice to Vacate (Month-to-Month Tenant)' },
+      { value: '60-Day Notice to Vacate', label: '60-Day Notice to Vacate (Year-to-Year Lease Tenant)' },
+    ];
+  }
+  if (state === 'New York') {
+    return [
+      { value: 'Pay or Quit Notice', label: 'Pay Rent or Quit Notice (14-Day Rent Demand)' },
+      { value: 'Cure or Quit Notice', label: 'Cure or Quit Notice (Lease-Required Only — No NY Statute)' },
+      { value: '30-Day Notice to Vacate', label: '30-Day Notice (Tenant Occupancy Under 1 Year)' },
+      { value: '60-Day Notice to Vacate', label: '60-Day Notice (Tenant Occupancy 1–2 Years)' },
+      { value: '90-Day Notice to Vacate', label: '90-Day Notice (Tenant Occupancy 2+ Years)' },
+    ];
+  }
+  return [
+    { value: 'Pay or Quit Notice', label: 'Pay Rent or Quit Notice (Non-Payment)' },
+    { value: 'Cure or Quit Notice', label: 'Cure or Quit Notice (Lease Violation)' },
+    { value: '30-Day Notice to Vacate', label: '30-Day Notice to Vacate (Month-to-Month Termination)' },
+    { value: '60-Day Notice to Vacate', label: '60-Day Notice to Vacate (Long-Term Tenancy)' },
+  ];
+}
+
+const NY_TIER_TYPES = ['30-Day Notice to Vacate', '60-Day Notice to Vacate', '90-Day Notice to Vacate'];
+const PERIOD_ANCHOR_COMBOS = new Set([
+  'Florida|30-Day Notice to Vacate',
+  'Florida|60-Day Notice to Vacate',
+  'Ohio|30-Day Notice to Vacate',
+]);
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -31,10 +70,34 @@ export default function Home() {
     serveMethod: 'Personal Service',
     serverName: '',
     serveDate: '',
+    periodStartDate: '',
+    tenancyOccupancyMonths: '',
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value };
+
+      // Switching state can make the current noticeType invalid (e.g. Ohio has no
+      // 60-Day option, New York has a 90-Day option others don't) — fall back to the
+      // first valid option for the new state rather than leaving a stale selection.
+      if (name === 'state') {
+        const validTypes = noticeTypeOptionsForState(value).map((opt) => opt.value);
+        if (!validTypes.includes(prev.noticeType)) {
+          next.noticeType = validTypes[0];
+        }
+      }
+
+      // New York's notice period is driven by occupancy length (RPL § 226-c), not a
+      // free-standing choice — auto-select the correct 30/60/90-day tier as the
+      // landlord types, while still leaving the dropdown editable if they disagree.
+      if (name === 'tenancyOccupancyMonths' && next.state === 'New York') {
+        next.noticeType = nyTierNoticeTypeForOccupancyMonths(value);
+      }
+
+      return next;
+    });
   };
 
   const handleNext = (e) => {
@@ -152,7 +215,7 @@ export default function Home() {
             {/* Trust Badges */}
             <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 pt-8 border-t border-slate-200/80 text-slate-600 text-xs sm:text-sm font-medium">
               <div className="flex items-center justify-center gap-2">
-                <span className="text-emerald-500 font-bold">✓</span> CA & TX Statutes Verified in Code
+                <span className="text-emerald-500 font-bold">✓</span> Statutory Rules Verified in Code for 5 States
               </div>
               <div className="flex items-center justify-center gap-2">
                 <span className="text-emerald-500 font-bold">✓</span> Includes Proof of Service
@@ -216,36 +279,35 @@ export default function Home() {
                         >
                           <option value="California">California (3-Day / 30-Day Notice Standards)</option>
                           <option value="Texas">Texas (3-Day Notice to Vacate)</option>
-                          <option value="Florida">Florida (3-Day / 15-Day Statutory Notice)</option>
+                          <option value="Florida">Florida (3-Day / 7-Day Statutory Notice)</option>
                           <option value="New York">New York (14-Day Rent Demand)</option>
                           <option value="Ohio">Ohio (3-Day Notice to Leave Premises)</option>
                         </select>
-                        {STATUTE_VERIFIED_STATES.includes(formData.state) ? (
+                        {isNoticeTypeGrounded(formData.state, formData.noticeType) ? (
                           <p className="text-xs text-slate-500 mt-1">
-                            Citation, notice period, and deadline for this state are verified in our statutory
+                            Citation, notice period, and deadline for this notice are verified in our statutory
                             rules engine, not just AI-generated.
                           </p>
                         ) : (
                           <p className="text-xs text-amber-600 mt-1">
-                            This state&apos;s notice is AI-drafted using general legal research and has not yet
-                            been independently statute-verified like California and Texas. Please double-check
-                            the citation and deadline before relying on it.
+                            This notice is AI-drafted using general legal research and has not yet been
+                            independently statute-verified. Please double-check the citation and deadline before
+                            relying on it.
                           </p>
                         )}
                       </div>
 
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-1">Notice Type *</label>
-                        <select 
-                          name="noticeType" 
-                          value={formData.noticeType} 
+                        <select
+                          name="noticeType"
+                          value={formData.noticeType}
                           onChange={handleChange}
                           className="w-full rounded-lg border border-slate-300 p-3 text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                         >
-                          <option value="Pay or Quit Notice">Pay Rent or Quit Notice (Non-Payment)</option>
-                          <option value="Cure or Quit Notice">Cure or Quit Notice (Lease Violation)</option>
-                          <option value="30-Day Notice to Vacate">30-Day Notice to Vacate (Month-to-Month Termination)</option>
-                          <option value="60-Day Notice to Vacate">60-Day Notice to Vacate (Long-Term Tenancy)</option>
+                          {noticeTypeOptionsForState(formData.state).map((opt) => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                          ))}
                         </select>
                       </div>
 
@@ -292,6 +354,67 @@ export default function Home() {
                           <p className="text-xs text-slate-500 mt-1">
                             Be specific — this is what your notice will tell the tenant to fix. Vague descriptions
                             produce vague notices, which is exactly what gets challenged in court.
+                          </p>
+                          {formData.state === 'Ohio' && (
+                            <p className="text-xs text-amber-600 mt-1">
+                              Ohio law only recognizes a statutory cure notice for health-and-safety violations
+                              (ORC § 5321.11) — things like an unsanitary unit or improper garbage disposal. For
+                              other lease violations (pets, guests, noise, etc.), Ohio has no cure-period statute;
+                              describe the violation clearly, but don&apos;t rely on this as a state-mandated cure right.
+                            </p>
+                          )}
+                          {formData.state === 'New York' && (
+                            <p className="text-xs text-amber-600 mt-1">
+                              New York has no statewide statute creating a pre-suit &quot;cure or quit&quot; notice for a
+                              market-rate tenancy — any cure right here comes from your lease itself, not state law.
+                              Check your lease for a cure clause before relying on this notice.
+                            </p>
+                          )}
+                        </div>
+                      )}
+
+                      {NY_TIER_TYPES.includes(formData.noticeType) && formData.state === 'New York' && (
+                        <div className="pt-2">
+                          <label className="block text-sm font-medium text-slate-700 mb-1">
+                            Tenant Occupancy Length (months) *
+                          </label>
+                          <input
+                            type="number"
+                            name="tenancyOccupancyMonths"
+                            required
+                            min="0"
+                            placeholder="e.g. 14"
+                            value={formData.tenancyOccupancyMonths}
+                            onChange={handleChange}
+                            className="w-full rounded-lg border border-slate-300 p-3 text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none"
+                          />
+                          <p className="text-xs text-slate-500 mt-1">
+                            New York law (RPL § 226-c) sets the required notice period by how long the tenant has
+                            occupied the unit, or their lease term, whichever is longer — under 1 year gets 30 days,
+                            1–2 years gets 60 days, 2+ years gets 90 days. We&apos;ve auto-selected{' '}
+                            <strong>{formData.noticeType}</strong> above based on what you enter here; adjust the
+                            dropdown yourself if you believe a different tier applies.
+                          </p>
+                        </div>
+                      )}
+
+                      {PERIOD_ANCHOR_COMBOS.has(`${formData.state}|${formData.noticeType}`) && (
+                        <div className="pt-2">
+                          <label className="block text-sm font-medium text-slate-700 mb-1">
+                            Next Rent Due Date *
+                          </label>
+                          <input
+                            type="date"
+                            name="periodStartDate"
+                            required
+                            value={formData.periodStartDate}
+                            onChange={handleChange}
+                            className="w-full rounded-lg border border-slate-300 p-3 text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none"
+                          />
+                          <p className="text-xs text-slate-500 mt-1">
+                            {formData.state === 'Florida'
+                              ? "Florida law (Fla. Stat. § 83.57) requires this notice to end on the last day of the tenant's current rental period, not just N days from today — enter the tenant's next rent due date so we can calculate the correct termination date."
+                              : "Ohio law (ORC § 5321.17(B)) requires this notice to expire on the tenant's next periodic rental date, not just 30 days from today — enter the tenant's next rent due date so we can calculate the correct termination date."}
                           </p>
                         </div>
                       )}
@@ -555,10 +678,10 @@ export default function Home() {
             </p>
 
             <p className="mt-2 max-w-2xl mx-auto">
-              Statutory citations, notice periods, and deadlines are verified in code for California and Texas.
-              Florida, New York, and Ohio notices are also available but are currently AI-drafted using general
-              legal research and have not yet been independently statute-verified. Additional verified states
-              coming soon.
+              Statutory citations, notice periods, and deadlines are verified in code for California, Texas,
+              Florida, Ohio, and most New York notice types. One exception: New York has no statewide statute
+              creating a pre-suit &quot;Cure or Quit&quot; notice, so that specific notice type remains AI-drafted
+              with a clear disclosure in the wizard. Additional verified states and notice types coming soon.
             </p>
 
             <p className="mt-2 max-w-2xl mx-auto">

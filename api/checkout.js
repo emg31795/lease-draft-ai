@@ -17,6 +17,8 @@ const METADATA_FIELDS = [
   'serveMethod',
   'serverName',
   'serveDate',
+  'periodStartDate',
+  'tenancyOccupancyMonths',
 ];
 
 export default async function handler(req, res) {
