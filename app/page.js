@@ -230,6 +230,92 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Sample Notice — shown before any PII is entered, so a cold visitor can judge
+            output quality without committing personal information. This is a static,
+            fictional example (not a live preview call) to keep the section fast and free
+            of API cost; the real wizard below generates a live, personalized preview. */}
+        <section className="py-12 md:py-16 px-4 sm:px-6 bg-white border-b border-slate-200">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">See Exactly What You&apos;ll Get</h2>
+              <p className="text-slate-600 mt-2 max-w-2xl mx-auto">
+                A real sample — same structure, same statutory grounding, same Proof of Service
+                affidavit every notice includes. This is a fictional example; the wizard below
+                builds yours with your actual details.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+              <div className="bg-slate-900 text-white px-5 py-3 flex items-center justify-between">
+                <span className="text-sm font-semibold tracking-wide">SAMPLE — 3-DAY PAY OR QUIT NOTICE (CALIFORNIA)</span>
+                <span className="text-xs bg-amber-400 text-slate-900 font-bold px-2 py-0.5 rounded">FICTIONAL EXAMPLE</span>
+              </div>
+              <pre className="p-5 sm:p-6 text-xs sm:text-sm text-slate-700 whitespace-pre-wrap font-mono leading-relaxed max-h-[420px] overflow-y-auto">
+{`3-DAY NOTICE TO PAY RENT OR QUIT
+
+DATE OF NOTICE: August 21, 2026
+
+TO: Jane Tenant
+PROPERTY ADDRESS: 123 Maple Street, Unit 4, Sacramento, CA 95814
+
+FROM: Riverbend Properties LLC
+PHONE: (916) 555-0142
+
+RE: NOTICE TO PAY RENT OR QUIT — CALIFORNIA CODE OF CIVIL PROCEDURE § 1161(2)
+
+PLEASE TAKE NOTICE that you are currently in default of your rental
+obligations. You owe $2,100.00 in past-due rent for the period beginning
+August 1, 2026. Pursuant to California Code of Civil Procedure § 1161(2), you are hereby
+required to pay this amount in full, or deliver possession of the premises,
+within THREE (3) DAYS of service of this notice, excluding Saturdays,
+Sundays, and other judicial holidays.
+
+Based on service by personal delivery on August 21, 2026, this 3-day period
+excludes the intervening weekend and expires on August 26, 2026.
+
+BASIS FOR NOTICE PERIOD
+
+California Code of Civil Procedure § 1161(2) requires this notice period to
+be computed in "judicial days" — court business days only, excluding
+Saturdays, Sundays, and judicial holidays. The deadline above was computed
+using this rule, not a flat calendar-day count.
+
+REQUIRED ACTION
+
+You must pay the full amount owed or vacate the premises no later than the
+date stated above. Failure to do so may result in legal proceedings to
+recover possession.
+
+SIGNATURE BLOCK
+
+Riverbend Properties LLC
+
+By: _______________________________
+Date: August 21, 2026
+
+PROOF OF SERVICE / AFFIDAVIT OF SERVICE
+
+STATE OF CALIFORNIA )
+                    ) ss.:
+COUNTY OF SACRAMENTO )
+
+I, the undersigned, being duly sworn, depose and state under penalty of
+perjury that on August 21, 2026, I served the foregoing notice upon the
+tenant named above by personal delivery to the premises described above.
+
+Signature: _______________________________
+Date: August 21, 2026`}
+              </pre>
+            </div>
+
+            <p className="text-center text-xs text-slate-500 mt-4 max-w-2xl mx-auto">
+              This example is illustrative. Your actual notice is generated from your specific
+              details and the verified statutory rules for your state and notice type — see
+              &quot;How We Actually Verify This&quot; below.
+            </p>
+          </div>
+        </section>
+
         {/* Main Form Generator Container */}
         <section id="notice-generator" className="py-12 md:py-16 max-w-4xl mx-auto px-4 sm:px-6">
           <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
@@ -612,17 +698,21 @@ export default function Home() {
               Judges dismiss up to 40% of self-filed eviction cases due to subtle notice flaws. A free word processor template can set your timeline back by months.
             </p>
 
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
               <div className="bg-slate-800/80 p-6 rounded-xl border border-slate-700">
                 <div className="text-red-400 text-xl font-bold mb-2">1. Missing Statutory Language</div>
                 <p className="text-sm text-slate-300">
-                  States like California, Texas, and New York require exact verbatim statutory warnings. Standard templates lack mandatory modern legal disclosures.
+                  California, Texas, Florida, Ohio, and New York each require their own exact
+                  statutory warnings and disclosures. Generic templates are written to be
+                  usable everywhere, which means they&apos;re precisely tailored to nowhere.
                 </p>
               </div>
               <div className="bg-slate-800/80 p-6 rounded-xl border border-slate-700">
-                <div className="text-red-400 text-xl font-bold mb-2">2. Faulty Day-Counting Logic</div>
+                <div className="text-red-400 text-xl font-bold mb-2">2. Faulty (or Missing) Day-Counting Logic</div>
                 <p className="text-sm text-slate-300">
-                  Courts strictly exclude court holidays and weekends depending on service method. Incorrect calculations cause immediate case dismissals.
+                  Courts strictly exclude weekends and, in several states, court holidays — and
+                  the exact rule varies by state and notice type. Incorrect calculations cause
+                  immediate case dismissals.
                 </p>
               </div>
               <div className="bg-slate-800/80 p-6 rounded-xl border border-slate-700">
@@ -631,7 +721,69 @@ export default function Home() {
                   Without a legally structured Affidavit of Service signed under penalty of perjury, judges won't accept notice delivery as proven.
                 </p>
               </div>
+              <div className="bg-slate-800/80 p-6 rounded-xl border border-slate-700">
+                <div className="text-red-400 text-xl font-bold mb-2">4. &quot;As Required By Law&quot; Placeholders</div>
+                <p className="text-sm text-slate-300">
+                  It&apos;s common for free and AI-generated notices to fill in the deadline with
+                  a vague placeholder like &quot;[X days as required by local law]&quot; and leave
+                  you to look up and compute the actual date yourself. LeaseDraft AI computes
+                  the real deadline date from verified, sourced rules for every notice —
+                  see exactly how below.
+                </p>
+              </div>
             </div>
+          </div>
+        </section>
+
+        {/* Verification Methodology Section — the honest, provable trust signal: how the
+            statutory grounding actually works, since a star rating isn't available yet. */}
+        <section className="py-16 px-4 sm:px-6 bg-blue-50 border-y border-blue-100">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold text-slate-900">How We Actually Verify This</h2>
+              <p className="text-slate-600 mt-2 max-w-2xl mx-auto">
+                We&apos;re a new tool without a long review history yet — so instead of asking
+                you to just trust a badge, here&apos;s exactly how the statutory grounding
+                behind every notice actually works.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div className="text-blue-600 text-2xl font-bold mb-2">1</div>
+                <h3 className="font-bold text-slate-900 mb-2">Sourced, Not Guessed</h3>
+                <p className="text-sm text-slate-600">
+                  Every citation, notice period, and day-counting rule is researched against the
+                  actual statute text and recent case law before it&apos;s added to the product —
+                  not generated on the fly by asking an AI model to recall a statute from memory.
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div className="text-blue-600 text-2xl font-bold mb-2">2</div>
+                <h3 className="font-bold text-slate-900 mb-2">Computed in Code, Not Prose</h3>
+                <p className="text-sm text-slate-600">
+                  The actual deadline date on your notice is calculated by tested code —
+                  weekends, court holidays, and period-based rules included — the same way every
+                  time. The AI drafts the notice language; it doesn&apos;t do the day-counting
+                  math.
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <div className="text-blue-600 text-2xl font-bold mb-2">3</div>
+                <h3 className="font-bold text-slate-900 mb-2">Verified With Real Purchases</h3>
+                <p className="text-sm text-slate-600">
+                  Before each state or notice type goes live, we run it through the actual paid
+                  flow and confirm the generated document matches the expected citation and
+                  deadline exactly — not just a code review.
+                </p>
+              </div>
+            </div>
+
+            <p className="text-center text-xs text-slate-500 mt-8 max-w-2xl mx-auto">
+              This is not a substitute for review by a licensed attorney in your state, and we
+              say so plainly in our <a href="/terms" className="underline hover:text-slate-700">Terms</a>.
+              What it is: a real, checkable process, not just a claim.
+            </p>
           </div>
         </section>
 
@@ -645,8 +797,12 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
               <div className="w-10 h-10 bg-blue-100 text-blue-600 font-bold rounded-lg flex items-center justify-center mb-4">01</div>
-              <h3 className="font-bold text-lg text-slate-900 mb-2">100% State Specific</h3>
-              <p className="text-sm text-slate-600">Updated to reflect modern residential tenancy laws across key US states.</p>
+              <h3 className="font-bold text-lg text-slate-900 mb-2">5 States, Verified in Code</h3>
+              <p className="text-sm text-slate-600">
+                California, Texas, Florida, Ohio, and New York — each notice type&apos;s
+                citation and deadline computed from researched, sourced rules, not just
+                generated on the fly.
+              </p>
             </div>
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
               <div className="w-10 h-10 bg-blue-100 text-blue-600 font-bold rounded-lg flex items-center justify-center mb-4">02</div>
@@ -656,7 +812,54 @@ export default function Home() {
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
               <div className="w-10 h-10 bg-blue-100 text-blue-600 font-bold rounded-lg flex items-center justify-center mb-4">03</div>
               <h3 className="font-bold text-lg text-slate-900 mb-2">Instant $9 Download</h3>
-              <p className="text-sm text-slate-600">No monthly subscriptions or recurring fees. Pay once, download your PDF immediately.</p>
+              <p className="text-sm text-slate-600">No monthly subscriptions, no recurring fees, no trial that quietly converts to a paid plan. Pay once, download your PDF immediately.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="py-16 px-4 sm:px-6 max-w-3xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-slate-900">Common Questions</h2>
+          </div>
+          <div className="space-y-6">
+            <div className="border-b border-slate-200 pb-6">
+              <h3 className="font-bold text-slate-900 mb-2">Why pay $9 instead of using a free template?</h3>
+              <p className="text-sm text-slate-600">
+                Free templates are built to be usable in any state, which means they can&apos;t
+                include your state&apos;s specific required language, and they typically leave
+                the notice deadline for you to calculate yourself. LeaseDraft AI computes that
+                deadline for you from verified, state-specific rules (see &quot;How We Actually
+                Verify This&quot; above) and bundles a properly formatted Proof of Service
+                affidavit — the two things landlords most often get wrong filing a notice
+                themselves.
+              </p>
+            </div>
+            <div className="border-b border-slate-200 pb-6">
+              <h3 className="font-bold text-slate-900 mb-2">Is this legal advice?</h3>
+              <p className="text-sm text-slate-600">
+                No. LeaseDraft AI is a self-help document formatting tool, not a law firm, and
+                doesn&apos;t provide legal representation. We strongly recommend independently
+                verifying any citation or deadline before relying on it, especially for
+                anything filed in court. Full details in our <a href="/terms" className="underline hover:text-slate-700">Terms of Service</a>.
+              </p>
+            </div>
+            <div className="border-b border-slate-200 pb-6">
+              <h3 className="font-bold text-slate-900 mb-2">Which states and notice types are actually verified?</h3>
+              <p className="text-sm text-slate-600">
+                California, Texas, Florida, Ohio, and nearly all New York notice types have
+                citations and deadlines computed from sourced, verified rules. The one exception
+                is New York&apos;s Cure or Quit notice, which has no statewide statute behind it
+                — the wizard discloses this clearly before you generate it. We&apos;re adding
+                more states over time.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-900 mb-2">What if I&apos;m not satisfied with my notice?</h3>
+              <p className="text-sm text-slate-600">
+                Email us within 7 days of purchase and we&apos;ll issue a full refund, no
+                questions asked.
+              </p>
             </div>
           </div>
         </section>
