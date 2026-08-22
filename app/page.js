@@ -876,6 +876,21 @@ Date: August 21, 2026`}
               <a href="/terms" className="text-blue-600 hover:underline">Terms of Service</a>
             </p>
 
+            {/*
+              State notice guides: internal links to the new pSEO content pages
+              (app/notices/**, app/guides/**) so they're discoverable from the homepage,
+              not just via the sitemap. Copy/layout only — no wizard/API changes.
+            */}
+            <p className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 font-medium">
+              <a href="/notices/ohio/3-day-notice-to-leave-premises" className="text-blue-600 hover:underline">Ohio 3-Day Notice</a>
+              <a href="/notices/ohio/30-day-notice-to-vacate" className="text-blue-600 hover:underline">Ohio 30-Day Notice</a>
+              <a href="/notices/new-york/14-day-rent-demand-notice" className="text-blue-600 hover:underline">NY 14-Day Rent Demand</a>
+              <a href="/notices/new-york/90-day-notice-to-vacate" className="text-blue-600 hover:underline">NY 90-Day Notice</a>
+              <a href="/guides/how-eviction-notice-deadlines-are-calculated" className="text-blue-600 hover:underline">Deadline Rules Guide</a>
+              <a href="/guides/proof-of-service-affidavit-eviction" className="text-blue-600 hover:underline">Proof of Service Guide</a>
+              <a href="/guides/why-eviction-cases-get-dismissed" className="text-blue-600 hover:underline">Why Cases Get Dismissed</a>
+            </p>
+
             <p className="mt-2 max-w-2xl mx-auto">
               Not happy with your notice? Email us within 7 days of purchase for a full refund, no questions asked.
             </p>
